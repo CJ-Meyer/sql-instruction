@@ -117,3 +117,69 @@ COUNT(InvoiceTotal) OVER (PARTITION BY INVOICEDATE) DateCount,
 AVG(InvoiceTotal) OVER (PARTITION BY INVOICEDATE) DateAVG
 FROM Invoices;
 
+--Chapter 5 Exercises
+-- EX.1
+SELECT VendorID, SUM(PaymentTotal) PaymentSum
+FROM Invoices
+GROUP BY VendorID;
+
+-- EX.2
+SELECT TOP 10
+VendorName, SUM(PaymentTotal) PaymentSum
+FROM Vendors V JOIN Invoices I ON V.VendorID = I.VendorID
+GROUP BY VendorName
+ORDER BY PaymentSum DESC;
+
+-- EX.3
+SELECT VendorName, COUNT(*) InvoiceCount, SUM(InvoiceTotal) InvoiceSum
+FROM Invoices I JOIN Vendors V ON I.VendorID = V.VendorID
+GROUP BY VendorName
+ORDER BY InvoiceCount ;
+
+-- EX.4 
+SELECT AccountDescription, COUNT(*) LineItemCount, SUM(InvoiceLineItemAmount) LineItemSum
+FROM GLAccounts G JOIN InvoiceLineItems I ON G.AccountNo = I.AccountNo
+GROUP BY AccountDescription
+HAVING COUNT(*)>1
+ORDER BY LineItemCount;
+
+-- EX.5
+SELECT AccountDescription,
+COUNT(*) LineItemCount,
+SUM(InvoiceLineItemAmount) LineItemSum,
+InvoiceDate
+FROM GLAccounts G JOIN InvoiceLineItems I ON G.AccountNo = I.AccountNo
+JOIN Invoices Inv ON Inv.InvoiceID = I.InvoiceID
+WHERE Inv.InvoiceDate >='10/1/2022' AND Inv.InvoiceDate<'12/31/2022'
+GROUP BY AccountDescription, InvoiceDate
+ORDER BY LineItemCount;
+
+-- EX.6
+SELECT AccountNo, SUM(InvoiceLineItemAmount) InvLineItemSum
+FROM InvoiceLineItems
+GROUP BY ROLLUP(AccountNo)
+
+--EX.7
+SELECT VendorName,
+AccountDescription,
+COUNT(*) LineItemCount,
+SUM(InvoiceLineItemAmount) LineItemSum
+FROM Vendors V JOIN Invoices I ON V.VendorID = I.VendorID
+JOIN InvoiceLineItems Inv ON Inv.InvoiceID = I.InvoiceID
+JOIN GLAccounts G On G.AccountNo = Inv.AccountNo
+GROUP BY VendorName, AccountDescription
+ORDER BY VendorName, AccountDescription;
+
+-- EX.8
+SELECT COUNT(DISTINCT Inv.AccountNo) NumOfAccounts, V.VendorName
+FROM Vendors V JOIN Invoices I On V.VendorID = I.VendorID
+JOIN InvoiceLineItems Inv ON I.InvoiceID = Inv.InvoiceID
+GROUP BY DefaultAccountNo, VendorName
+ORDER BY V.VendorName;
+
+-- EX.9
+SELECT VendorID, InvoiceDate, InvoiceTotal,
+    SUM(InvoiceTotal) OVER (PARTITION BY VendorID) AS VendorTotal,
+    COUNT(InvoiceTotal) OVER (PARTITION BY VendorID) AS VendorCount,
+    AVG(InvoiceTotal) OVER (PARTITION BY VendorID) AS VendorAvg
+FROM Invoices;
