@@ -106,6 +106,20 @@ SELECT DepartmentName, CourseID
 FROM Departments D LEFT JOIN Courses C ON D.DepartmentID = C.DepartmentID
 WHERE CourseID IS NULL;
 
--- EX.8
+-- EX.8 W/ Sean
+SELECT 
+CourseDescription Course,
+LastName+', '+FirstName 'Instructor Name',
+D_Course.DepartmentName as CourseDept,
+D_Instructor.DepartmentName InstructorDept
+FROM Courses C 
+JOIN Instructors I ON C.InstructorID = I.InstructorID
+JOIN Departments D_Course ON D_Course.DepartmentID = C.DepartmentID
+JOIN Departments D_Instructor ON D_Instructor.DepartmentID = I.DepartmentID
+WHERE D_Course.DepartmentID != D_Instructor.DepartmentID;
 
-
+--Any Instructors who arent assgined a course?
+SELECT LastName+', '+FirstName InstructorName, CourseDescription
+FROM Instructors I LEFT JOIN Courses C
+ON I.InstructorID = C.InstructorID
+WHERE CourseDescription IS NULL;
