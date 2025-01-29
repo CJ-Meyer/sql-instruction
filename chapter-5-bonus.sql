@@ -43,6 +43,13 @@ FROM OrderItems O JOIN Products P ON O.ProductID = P.ProductID
 GROUP BY  P.ProductName, O.Quantity;
 
 
--- EX.7
-
+-- EX.7 Sol.
+SELECT EmailAddress,
+COUNT(DISTINCT oi.ProductID) ProductCount
+FROM Customers c JOIN Orders o ON c.CustomerID = o.CustomerID
+JOIN OrderItems oi ON oi.OrderID = o.OrderID
+JOIN Products p ON p.ProductID = oi.ProductID
+GROUP BY EmailAddress
+HAVING COUNT(DISTINCT oi.ProductID) > 1
+ORDER BY ProductCount DESC;
 

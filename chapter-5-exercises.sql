@@ -179,7 +179,7 @@ ORDER BY V.VendorName;
 
 -- EX.9
 SELECT VendorID, InvoiceDate, InvoiceTotal,
-    SUM(InvoiceTotal) OVER (PARTITION BY VendorID) AS VendorTotal,
-    COUNT(InvoiceTotal) OVER (PARTITION BY VendorID) AS VendorCount,
-    AVG(InvoiceTotal) OVER (PARTITION BY VendorID) AS VendorAvg
-FROM Invoices;
+    SUM(InvoiceTotal) OVER (ORDER BY VendorID) AS VendorTotal,
+    COUNT(InvoiceTotal) OVER (ORDER BY VendorID) AS VendorCount,
+    AVG(InvoiceTotal) OVER (ORDER BY VendorID) AS VendorAvg
+FROM Invoices

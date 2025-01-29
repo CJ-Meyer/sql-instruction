@@ -123,3 +123,20 @@ SELECT LastName+', '+FirstName InstructorName, CourseDescription
 FROM Instructors I LEFT JOIN Courses C
 ON I.InstructorID = C.InstructorID
 WHERE CourseDescription IS NULL;
+
+--CHAPTER 5
+--EX.1
+SELECT COUNT(*) InstructorCount, AVG(AnnualSalary) AVGAnnualSalary
+FROM Instructors
+WHERE Status = 'F';
+
+--EX.2
+SELECT DepartmentName, COUNT(*) InstructorCount, MAX(AnnualSalary) HighestAnnualSalary
+FROM Departments D JOIN Instructors I ON D.DepartmentID = I.DepartmentID
+GROUP BY DepartmentName
+ORDER BY InstructorCount DESC;
+
+--EX.3
+SELECT FirstName+LastName Name, COUNT(*) CourseCount
+FROM Instructors I JOIN Courses C On I.InstructorID = C.InstructorID
+GROUP BY CourseID,FirstName+LastName ;
