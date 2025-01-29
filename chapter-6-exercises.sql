@@ -200,3 +200,36 @@ SELECT  LastName, FirstName, AnnualSalary
 FROM Instructors
 
 --MY guitar shop 
+--EX.1
+SELECT *
+FROM Products
+SELECT * FROM Categories
+
+SELECT *
+FROM Products P JOIN Categories C ON P.CategoryID = C.CategoryID
+
+SELECT DISTINCT(CategoryName)
+FROM Categories 
+WHERE CategoryID IN 
+(SELECT DISTINCT(CategoryID) FROM Products)
+--JOIN Products P ON P.CategoryID = C.CategoryID
+ORDER BY CategoryName
+
+-- JOIN Order to OrderItems and order to customer
+--EX.4 Write a SELECT statement that returns thee columns, EmailAddress, OrderID and the order total for Each order
+--OrderTotal = SUM(OrderItems Total) = (OrderItemPrice - discountamount)*quantity
+--Group the result set by emailaddress and orderID, Then calculate ordertotal from columns in orderitem
+--Write a second Select
+SELECT EmailAddress, O.OrderID, SUM((ItemPrice- DiscountAmount)* Quantity) OrderTotal
+FROM Orders O 
+JOIN Customers C On C.CustomerID = O.CustomerID
+JOIN OrderItems OI ON OI.OrderID = O.OrderID
+GROUP BY EmailAddress, o.OrderID
+
+SELECT EmailAddress, MAX(OrderTotal) HighestOrder
+FROM (SELECT EmailAddress, O.OrderID, SUM((ItemPrice- DiscountAmount)* Quantity) OrderTotal
+			FROM Orders O 
+			JOIN Customers C On C.CustomerID = O.CustomerID
+			JOIN OrderItems OI ON OI.OrderID = O.OrderID
+		GROUP BY EmailAddress, o.OrderID) OrderTotals
+GROUP BY EmailAddress;
